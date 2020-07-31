@@ -1,0 +1,74 @@
+Artifactory
+
+yum install epel-release  java-1.8.0-openjdk-devel vim wget ntp git -y
+systemctl stop firewalld;systemctl disable firewalld
+ntpdate pool.ntp.org
+wget https://archive.apache.org/dist/maven/maven-3/3.5.4/binaries/apache-maven-3.5.4-bin.tar.gz
+tar xvf apache-maven-3.5.4-bin.tar.gz
+mv apache-maven-3.5.4  /usr/local/apache-maven
+ 
+vim ~/.bash_profile
+
+In this file
+
+export JAVA_HOME=/usr/lib/jvm/java-1.8.0
+export JRE_HOME=/usr/lib/jvm/java-1.8.0/jre
+PATH=$PATH:$HOME/bin:$JAVA_HOME/bin:$JRE_HOME/bin
+export M2_HOME=/usr/local/apache-maven
+export M2=$M2_HOME/bin 
+export PATH=$M2:$PATH
+
+source ~/.bash_profile
+
+mvn -version
+
+
+
+
+just refernece - https://www.jfrog.com/confluence/display/RTF/Installing+Artifactory
+
+
+just refernece - https://www.jfrog.com/confluence/display/RTF/Installing+on+Linux+Solaris+or+Mac+OS#InstallingonLinuxSolarisorMacOS-ServiceInstallation
+
+
+wget https://bintray.com/jfrog/artifactory-rpms/rpm -O /etc/yum.repos.d/bintray-jfrog-artifactory-rpms.repo
+
+yum install jfrog-artifactory-oss
+
+vim /opt/jfrog/artifactory/app/bin/artifactory.default --> Just for reference
+
+change heap size to 512mb --> if you want play in testing this also just for reference
+
+
+artifactory is webapps which deployed over tomcat
+
+yum install tomcat-webapps tomcat-admin-webapps -y
+
+vim /usr/share/tomcat/conf/tomcat.conf
+JAVA_OPTS="-Djava.security.egd=file:/dev/./urandom -Djava.awt.headless=true -Xmx512m -XX:MaxPermSize=256m -XX:+UseConcMarkSweepGC"
+
+vim /usr/share/tomcat/conf/tomcat-users.xml
+
+<role rolename="admin"/>
+<role rolename="admin-gui"/>
+<role rolename="admin-script"/>
+<role rolename="manager"/>
+<role rolename="manager-gui"/>
+<role rolename="manager-script"/>
+<role rolename="manager-jmx"/>
+<role rolename="manager-status"/>
+<user username="admin" password="adminadmin" roles="admin,manager,admin-gui,admin-script,manager-gui,manager-script,manager-jmx,manager-status" />
+
+
+systemctl restart artifactory;systemctl enable artifactory;systemctl enable tomcat;systemctl restart tomcat
+
+http://192.168.122.32:8080/
+
+http://192.168.149.22:8081/artifactory/
+
+vi /usr/share/tomcat/conf/server.xml --> port change in tomcat
+
+
+in artifactory console
+
+http://35.232.21.100:8081/artifactory/list/libs-snapshot-local/com/wakaleo/gameoflife/gameoflife-web/1.0-SNAPSHOT/gameoflife-web-1.0-20190923.100047-1.war
