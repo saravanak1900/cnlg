@@ -1,0 +1,45 @@
+From any linux machine which you want to make as jenkins client then you must complete the below java settings  then proceed the ssh key creation etc.
+
+yum install epel-release  java-1.8.0-openjdk-devel vim wget ntp -y
+systemctl stop firewalld;systemctl disable firewalld
+ntpdate pool.ntp.org
+ 
+ 
+vim ~/.bash_profile
+
+In this file
+
+export JAVA_HOME=/usr/lib/jvm/java-1.8.0
+export JRE_HOME=/usr/lib/jvm/java-1.8.0/jre
+PATH=$PATH:$HOME/bin:$JAVA_HOME/bin:$JRE_HOME/bin
+
+
+source ~/.bash_profile
+
+***********************Add a node*********************************
+
+in jenkins server
+
+su - -s /bin/bash jenkins
+ssh-keygen
+
+bash-4.2$ cat /var/lib/jenkins/.ssh/id_rsa.pub
+ssh-rsa AAAAB3NzaC1yc2EAAAADAQABAAABAQCvRoyx7Yy6dMl4faP3zmz4JHRqpMwmzJ+VWlZWlaZSFPT6Xxs81WQV1wkX6gffTax0yVkaKqjUyiExj9K74K1dare4BTNeYCJeBpzj0g8xz/cLyRoxa1Vaakq+o1m2KXQwxKjJCih1BQUlKc6kUPy9FjdCzGUhwUOQeG/sHBQ01imlKRPVDxgXS9j55gCgOAmqiOzefPBKns3F1cPsoa6fLQ4MEATUy6MD3G1O8fEvgUYKZkMybOqgMH2q3CT5hTdyq29FOyyUjjFiqjJzKA7T0TyKSuCCWKDcHnO+w9i968uOlQ/fj1hsDRTeEPDwFpetzCMM7M7r3ZjWSE0DI059 jenkins@server1.cnl.com
+
+
+Slave 1 machine
+
+useradd -d /var/lib/jenkins jenkins
+cat /etc/passwd | grep -i jenkins
+passwd jenkins
+
+
+from jenkins server run the following command
+
+ensure you are in /var/lib/jenkins directory as jenkins user and run the below command
+
+ssh-copy-id slave1
+
+then 
+
+if you try to ssh to slave1 it shouldnt ask any password.
