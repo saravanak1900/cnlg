@@ -1,0 +1,440 @@
+yum install epel-release -y
+ yum repolist
+
+#Install the required dependencies:
+
+yum install yum-utils device-mapper-persistent-data lvm2  bash-completion bash-completion-extras -y
+
+source /etc/profile.d/bash_completion.sh
+
+#Add the stable Docker repository by typing:
+
+yum-config-manager --add-repo https://download.docker.com/linux/centos/docker-ce.repo
+
+
+#Now that we have Docker repository enabled, we can install the latest version of Docker CE (Community Edition) using yum by typing:
+
+yum install docker-ce
+
+
+
+#Once the Docker package is installed, we start the Docker daemon with:
+
+systemctl start docker
+
+#To verify that the Docker service is running type:
+
+systemctl status docker
+
+#Enable the Docker service to be automatically started at boot time:
+
+systemctl enable docker
+
+#At the time of the writing of this article, the current stable version of Docker is 18.03.1, we can check our Docker version by typing:
+
+docker -v
+
+#To verify Docker is installed successfully and that you can run docker commands without sudo run the following command which will download a test image, run it in a container, print a “Hello from Docker” message and exit:
+
+docker container run hello-world
+
+**********************************************************************************************
+
+
+
+
+DOCKER IMAGES
+
+
+#To search the Docker Hub repository for an image just use the search subcommand. For example, to search for the CentOS image, run:
+
+docker search centos
+
+
+#If we want to download the official build of CentOS 7, we can do that by using the image pull subcommand:
+
+docker image pull centos
+
+#Depending on your Internet speed, the download may take a few seconds or a few minutes. Once the image is downloaded we can list the images with:
+
+docker image ls
+
+REPOSITORY          TAG                 IMAGE ID            CREATED             SIZE
+hello-world         latest              e38bc07ac18e        3 weeks ago         1.85kB
+centos              latest              e934aafc2206        4 weeks ago         199MB
+
+
+
+#If for some reason you want to delete an image you can do that with the image rm [image_name] subcommand:
+
+docker image rm centos
+ 
+ 
+ ************************************************************************************************************
+
+DOCKER - CONTAINERS
+
+
+#An instance of an image is called a container. A container represents a runtime for a single application, process, or service.
+
+#It may not be the most appropriate comparison but if you are a programmer you can think of a Docker image as class and Docker container as an instance of a class.
+
+#We can start, stop, remove and manage a container with the docker container subcommand.
+
+#The following command will start a Docker container based on the CentoOS image. If you don’t have the image locally, it will download it first:
+
+docker container run centos
+
+
+
+#The switch -it allows us to interact with the container via the command line. To start an interactive container type:
+
+docker container run -it centos /bin/bash
+
+
+
+docker container run -dit centos /bin/bash --> if we want to run permanently in the background
+
+#To list active containers, type:
+
+docker container ls
+
+To view both active and inactive containers, pass it the -a switch:
+
+docker container ls -a
+
+CONTAINER ID        IMAGE               COMMAND                  CREATED             STATUS                      PORTS               NAMES
+79ab8e16d567        centos              "/bin/bash"              22 minutes ago      Up 22 minutes                                   ecstatic_ardinghelli
+c55680af670c        centos              "/bin/bash"              30 minutes ago      Exited (0) 30 minutes ago                       modest_hawking
+c6a147d1bc8a        hello-world         "/hello"                 20 hours ago        Exited (0) 20 hours ago                         sleepy_shannon
+
+
+To delete a container multiple containers just copy the container ID (or IDs) from above and paste them after the container rm subcommand:
+
+docker container rm c55680af670c
+
+**************************************************************************************************
+To see running container
+
+docker ps
+
+To see container full information
+
+docker inspect <container id >
+
+**********************************************************************************
+
+***********************
+To view the running containers
+
+docker ps 
+
+To view the list of containers that are not active
+
+docker ps -a
+
+To stop a contaner
+
+docker stop <container id or container name>
+
+To start a container 
+
+docker start <container id or container name>
+
+To stop any riunning container
+
+docker stop $(docker ps -q)  
+
+now To remove a unwanted container
+
+docker rm <container id or container name>
+
+
+To see the container id or container name
+
+docker ps -a
+
+To remove all the containers
+
+docker rm $(docker ps -a -q)
+
+
+**************************************************************************************************************************
+***********************************************************************************************************************
+
+
+
+DOCKER-IMAGES
+
+We must know the exact repository name to pull corresponding docker images. So use "docker search" command to find the correct repository name to download the particular docker images.
+
+For Hello-World:
+[root@docker-host ~]# docker search hello-world
+
+
+For CentOS:
+[root@docker-host ~]# docker search centos
+
+
+#How to list available docker images?
+Use "docker images" command to know the list of docker images available in your local docker host.
+
+[root@docker-host ~]# docker images
+REPOSITORY              TAG                 IMAGE ID            CREATED             SIZE
+docker.io/centos        latest              49f7960eb7e4        2 weeks ago         200 MB
+docker.io/hello-world   latest              e38bc07ac18e        2 months ago        1.85 kB
+[root@docker-host ~]#
+
+
+#How to know detailed information about a Docker Images?
+Use "docker inspect" command to know detailed information about a Docker Images available locally using Docker Image ID.
+This will give lot of information about Docker Images as below.
+
+
+[root@docker-host ~]# docker inspect 49f7960eb7e4
+
+
+
+#How to get history of a Docker Images?
+Use "docker history" command along with Docker Image ID to get a history of a Docker Images.
+[root@docker-host ~]# docker history e38bc07ac18e
+
+
+How to remove or delete Docker Images?
+use "docker images" to find the Docker Image ID or Image Name and use "docker rmi" command  to remove or delete docker images.
+[root@docker-host ~]# docker rmi 49f7960eb7e4
+
+To remove multiple docker images, mention the docker images ID separated by spaces as below.
+[root@docker-host ~]# docker rmi 49f7960eb7e4 47fjay738290 987tr78rt5g5
+
+To remove all docker images in a single command,
+[root@docker-host ~]# docker rmi $(docker images -a -q)
+
+
+
+*********************************************************************************************************************
+
+
+
+/*********************************************************
+
+Dockerfile Instructions Explained with Examples
+
+
+vim dockerfile
+
+FROM docker.io/centos
+MAINTAINER Devops Engineer
+RUN yum update && yum -y install httpd
+RUN mkdir -p /data/myscript
+WORKDIR /data/myscript
+CMD python app.py
+
+after you created the above file then run the below command
+
+docker build .
+
+
+another dockerfile for more easy understanding
+
+vim dockerfile --> creating the dockerfile via vim editor
+
+FROM docker.io/centos
+MAINTAINER admin
+RUN yum update -y && yum -y install httpd
+RUN echo "Welcome to our homepage created using dockerfile" > /var/www/html/index.html
+EXPOSE 80
+CMD apachectl -D FOREGROUND
+
+
+after you created the above file then run the below command
+
+docker build .
+
+
+[root@server1 ~]# docker images
+REPOSITORY          TAG                 IMAGE ID            CREATED             SIZE
+<none>              <none>              6f3baff9b180        2 hours ago         200MB
+<none>              <none>              3b1943a5f478        2 hours ago         200MB
+<none>              <none>              7770d3b057fc        3 hours ago         362MB
+centos              latest              5182e96772bf        2 weeks ago         200MB
+nginx               latest              c82521676580        4 weeks ago         109MB
+hello-world         latest              2cb0d9787c4d        6 weeks ago         1.85kB
+[root@server1 ~]# docker tag 6f3baff9b180 vijaycnl.com/httpdserver
+[root@server1 ~]# docker images
+REPOSITORY                 TAG                 IMAGE ID            CREATED             SIZE
+vijaycnl.com/httpdserver   latest              6f3baff9b180        2 hours ago         200MB
+<none>                     <none>              3b1943a5f478        2 hours ago         200MB
+<none>                     <none>              7770d3b057fc        3 hours ago         362MB
+centos                     latest              5182e96772bf        2 weeks ago         200MB
+nginx                      latest              c82521676580        4 weeks ago         109MB
+hello-world                latest              2cb0d9787c4d        6 weeks ago         1.85kB
+
+
+Explanation
+1. Used FROM instruction to specify the image.
+2. Used MAINTAINER instruction to specify information about the author.
+3. Used RUN instruction to update all packages and install the httpd package
+4. Again used RUN instruction to create a homepage "index.html" under the apache default directory /var/www/html.
+5. Used EXPOSE instruction to open the listening port 80 of httpd service.
+6. Used CMD instruction to run a apache service command as an executable when container is launched.
+
+
+[root@docker-host /]# docker images
+
+
+docker run -dit --name cloudnloud-web -p 8080:80 -v /var/tmp/:/usr/local/apache2/htdocs/ httpd:2.4
+
+8080 port --> base linux machine port
+80 --> docker image port
+/var/tmp/ --> base linux machine directory
+/usr/local/apache2/htdocs/ --> docker image directory -->(goto docker hub and check it)
+
+vim /var/tmp/docker.html
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<title>Learn Docker at cloudnloud.com</title>
+</head>
+<body>
+<h1>Learn Docker With Us</h1>   
+</body>
+</html>
+
+***************************************************
+Purging All Unused or Dangling Images, Containers, Volumes, and Networks
+Docker provides a single command that will clean up any resources — images, containers, volumes, and networks — that are dangling (not associated with a container):
+
+docker system prune
+
+To additionally remove any stopped containers and all unused images (not just dangling images), add the -a flag to the command:
+
+docker system prune -a
+
+Removing Docker Images --> Remove one or more specific images
+
+Use the docker images command with the -a flag to locate the ID of the images you want to remove. This will show you every image, including intermediate image layers. When you've located the images you want to delete, you can pass their ID or tag to docker rmi:
+
+List:
+
+docker images -a
+
+Remove:
+
+docker rmi <Image>
+
+Remove dangling images
+
+Docker images consist of multiple layers. Dangling images are layers that have no relationship to any tagged images. They no longer serve a purpose and consume disk space. They can be located by adding the filter flag, -f with a value of dangling=true to the docker images command. When you're sure you want to delete them, you can use the docker images purge command:
+
+Note: If you build an image without tagging it, the image will appear on the list of dangling images because it has no association with a tagged image. You can avoid this situation by providing a tag when you build, and you can retroactively tag an images with the docker tag command.
+
+List:
+
+docker images -f dangling=true
+
+Remove:
+
+docker images purge
+
+Removing images according to a pattern
+
+You can find all the images that match a pattern using a combination of docker images and grep. Once you're satisfied, you can delete them by using awk to pass the IDs to docker rmi. Note that these utilities are not supplied by Docker and are not necessarily available on all systems:
+
+List:
+
+docker images -a |  grep "pattern"
+
+Remove:
+
+docker images -a | grep "pattern" | awk '{print $3}' | xargs docker rmi
+
+Remove all images
+
+All the Docker images on a system can be listed by adding -a to the docker images command. Once you're sure you want to delete them all, you can add the -q flag to pass the Image ID to docker rmi:
+
+List:
+
+docker images -a
+
+
+Remove single image
+
+docker image remove <image id>
+
+Remove all the images
+
+docker rmi $(docker images -a -q)
+
+Removing Containers --> Remove one or more specific containers
+
+Use the docker ps command with the -a flag to locate the name or ID of the containers you want to remove:
+
+List:
+
+docker ps -a
+
+Remove:
+
+docker rm ID_or_Name ID_or_Name
+
+Remove a container upon exit
+If you know when you’re creating a container that you won’t want to keep it around once you’re done, you can run docker run --rm to automatically delete it when it exits.
+
+Run and Remove:
+
+docker run --rm image_name
+
+Remove all exited containers
+You can locate containers using docker ps -a and filter them by their status: created, restarting, running, paused, or exited. To review the list of exited containers, use the -f flag to filter based on status. When you've verified you want to remove those containers, using -q to pass the IDs to the docker rm command.
+
+List:
+
+docker ps -a -f status=exited
+
+Remove:
+
+docker rm $(docker ps -a -f status=exited -q)
+
+Remove containers using more than one filter
+Docker filters can be combined by repeating the filter flag with an additional value. This results in a list of containers that meet either condition. For example, if you want to delete all containers marked as either Created (a state which can result when you run a container with an invalid command) or Exited, you can use two filters:
+
+
+List:
+
+docker ps -a -f status=exited -f status=created
+
+Remove:
+
+docker rm $(docker ps -a -f status=exited -f status=created -q)
+
+Remove containers according to a pattern
+You can find all the containers that match a pattern using a combination of docker ps and grep. When you're satisfied that you have the list you want to delete, you can use awk and xargs to supply the ID to docker rmi. Note that these utilities are not supplied by Docker and not necessarily available on all systems:
+
+List:
+
+docker ps -a |  grep "pattern”
+
+Remove:
+
+docker ps -a | grep "pattern" | awk '{print $3}' | xargs docker rmi
+
+Stop and remove all containers
+You can review the containers on your system with docker ps. Adding the -a flag will show all containers. When you're sure you want to delete them, you can add the -q flag to supply the IDs to the docker stop and docker rm commands:
+
+List:
+
+docker ps -a
+Remove:
+
+docker stop $(docker ps -a -q)
+docker rm $(docker ps -a -q)
+
+Remove a container and its volume
+If you created an unnamed volume, it can be deleted at the same time as the container with the -v flag. Note that this only works with unnamed volumes. When the container is successfully removed, its ID is displayed. Note that no reference is made to the removal of the volume. If it is unnamed, it is silently removed from the system. If it is named, it silently stays present.
+
+Remove:
+
+docker rm -v container_name
