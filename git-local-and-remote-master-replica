@@ -1,0 +1,51 @@
+********************************************************************************
+in linux machine 1
+
+#yum install git -y
+#mkdir -p /usr/opt/git1
+#chmod -R 777 /usr/opt/git1
+#git init --bare --shared /usr/opt/git1/safebox.git
+chmod -R 777 /usr/opt/git1
+#useradd davidson
+#passwd davidson
+#su - davidson
+$git clone /usr/opt/git1/safebox
+$cd safebox
+$touch flex.txt
+git add *
+$git config --global  user.name 'davidson'
+$git config --global user.email 'davidson@pserver.bbtest.com'
+git status
+git commit -m "i have just download flex.txt"
+git push
+$git config --global push.default simple
+git push
+
+
+go to machine2 and run the following commands
+
+yum install git -y
+#useradd leo
+passwd leo
+su - leo
+#git clone root@pserver:/usr/opt/git1/safebox (please if you are using google cloud please use some user name rather root id)
+#cd safebox
+#git pull
+
+************************************************************************************************************************
+
+in linux machine 1 itself create new another user
+useradd vijay
+
+#su - vijay
+$git clone /usr/opt/git1/safebox
+$cd safebox
+$cp /var/tmp/flex.txt .
+$git config --global  user.name 'vijay'
+$git config --global user.email 'vijay@test.com'
+$git config --global default.push simple
+$git add package.pp
+$git commit -m "Initial"
+git config --global default.push simple
+$git push
+© 2020 GitHub, Inc.
