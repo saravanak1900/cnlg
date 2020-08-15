@@ -225,10 +225,10 @@ vim dockerfile
 
 FROM docker.io/centos
 MAINTAINER Devops Engineer
-RUN yum update && yum -y install httpd
+RUN yum update -y && yum -y install httpd
 RUN mkdir -p /data/myscript
 WORKDIR /data/myscript
-CMD python app.py
+#CMD python app.py
 
 after you created the above file then run the below command
 
