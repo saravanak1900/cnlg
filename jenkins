@@ -1,9 +1,4 @@
-yum install epel-release  java-1.8.0-openjdk-devel vim wget ntp git -y
-systemctl stop firewalld;systemctl disable firewalld
-ntpdate pool.ntp.org
-wget https://archive.apache.org/dist/maven/maven-3/3.5.4/binaries/apache-maven-3.5.4-bin.tar.gz
-tar xvf apache-maven-3.5.4-bin.tar.gz
-mv apache-maven-3.5.4  /usr/local/apache-maven
+
  
 vim ~/.bash_profile
 
@@ -20,7 +15,11 @@ source ~/.bash_profile
 
 mvn -version
 
-
+### Install STABLE LTS Jenkins 
+####################################
+sudo wget -O /etc/yum.repos.d/jenkins.repo http://pkg.jenkins.io/redhat-stable/jenkins.repo
+sudo rpm --import http://pkg.jenkins.io/redhat-stable/jenkins.io.key
+sudo yum install jenkins -y
 
 wget -O /etc/yum.repos.d/jenkins.repo http://pkg.jenkins-ci.org/redhat/jenkins.repo
 
