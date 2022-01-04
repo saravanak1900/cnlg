@@ -25,14 +25,15 @@ mvn -version
 sudo wget -O /etc/yum.repos.d/jenkins.repo http://pkg.jenkins.io/redhat-stable/jenkins.repo
 sudo rpm --import http://pkg.jenkins.io/redhat-stable/jenkins.io.key
 sudo yum install jenkins -y
-
+```
+sudo -i
 wget -O /etc/yum.repos.d/jenkins.repo http://pkg.jenkins-ci.org/redhat/jenkins.repo
 
 rpm --import https://pkg.jenkins.io/redhat/jenkins.io.key
 yum install jenkins -y
 
 systemctl restart jenkins;systemctl enable jenkins;systemctl status jenkins
-
+```
 The following plugins needs to be installed
 
 dashboard view
